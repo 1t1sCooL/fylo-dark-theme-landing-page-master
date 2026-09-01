@@ -14,7 +14,7 @@ const Testimonials: Component = () => (
   <section class="testimonials" aria-label="Testimonials">
     <For each={TESTIMONIALS}>
       {(item) => (
-        <figure class="tcard">
+        <figure class="tcard reveal">
           <blockquote class="tcard__quote">{QUOTE}</blockquote>
           <figcaption class="tcard__author">
             <img

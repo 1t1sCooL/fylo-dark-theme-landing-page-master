@@ -3,7 +3,7 @@ import { asset } from '../asset'
 
 const Footer: Component = () => (
   <footer class="footer">
-    <div class="footer__inner">
+    <div class="footer__inner reveal">
       <img class="footer__logo" src={asset('images/logo.svg')} alt="Fylo" width="176" height="52" />
       <div class="footer__cols">
         <p class="footer__location">

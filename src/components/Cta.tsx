@@ -17,7 +17,7 @@ const Cta: Component = () => {
   }
 
   return (
-    <section class="cta" aria-labelledby="cta-title">
+    <section class="cta reveal" aria-labelledby="cta-title">
       <h2 class="cta__title" id="cta-title">
         Get early access today
       </h2>
