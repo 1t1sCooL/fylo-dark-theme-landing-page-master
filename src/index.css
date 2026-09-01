@@ -82,7 +82,12 @@ h3 {
 }
 
 /* ============ Gradient button ============ */
+/* CSS can't transition a gradient, so the hover state lives on a ::before
+   overlay whose opacity is animated — no flicker, no repaint jump. */
 .btn {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -92,11 +97,31 @@ h3 {
   color: var(--white);
   font: 700 16px var(--font-heading);
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to right, hsl(176, 68%, 72%), hsl(198, 68%, 60%));
+  opacity: 0;
+  transition: opacity 0.25s ease;
 }
 
 .btn:hover {
-  background: hsl(176, 68%, 70%);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px hsla(176, 68%, 64%, 0.25);
+}
+
+.btn:hover::before {
+  opacity: 1;
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px hsla(176, 68%, 64%, 0.2);
 }
 
 /* ============ Hero band (Navy 850 + curvy transition into Navy 900) ============ */
@@ -131,15 +156,34 @@ h3 {
 }
 
 .nav__link {
+  position: relative;
   font: 400 16px var(--font-heading);
   color: hsl(0, 0%, 90%);
-  transition: color 0.2s ease;
+  transition: color 0.25s ease, text-shadow 0.25s ease;
+}
+
+/* underline slides in instead of text-decoration popping;
+   faux-bold via text-shadow so the link width never changes */
+.nav__link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.25s ease;
 }
 
 .nav__link:hover {
   color: var(--white);
-  font-weight: 700;
-  text-decoration: underline;
+  text-shadow: 0 0 0.6px currentColor;
+}
+
+.nav__link:hover::after {
+  transform: scaleX(1);
 }
 
 /* ============ Hero ============ */
@@ -197,6 +241,14 @@ h3 {
   margin-bottom: 30px;
 }
 
+.feature__icon-box img {
+  transition: transform 0.35s ease;
+}
+
+.feature:hover .feature__icon-box img {
+  transform: translateY(-6px);
+}
+
 .feature__title {
   font-size: 20px;
   margin-bottom: 10px;
@@ -248,7 +300,11 @@ h3 {
   color: var(--teal);
   font-size: 16px;
   line-height: 22px;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.productive__link img {
+  transition: transform 0.25s ease, filter 0.25s ease;
 }
 
 .productive__link:hover {
@@ -258,6 +314,7 @@ h3 {
 
 .productive__link:hover img {
   filter: brightness(0) invert(1);
+  transform: translateX(4px);
 }
 
 /* ============ Testimonials ============ */
@@ -287,6 +344,12 @@ h3 {
   border-radius: 4px;
   padding: 40px 26px 26px;
   box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tcard:hover {
+  transform: translateY(-6px);
+  box-shadow: 5px 14px 30px rgba(0, 0, 0, 0.3);
 }
 
 .tcard__quote {
@@ -373,7 +436,15 @@ h3 {
   color: hsl(0, 0%, 75%);
 }
 
-.cta__input:focus-visible,
+.cta__input {
+  transition: box-shadow 0.25s ease;
+}
+
+.cta__input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px hsla(176, 68%, 64%, 0.5);
+}
+
 .cta__submit:focus-visible,
 .btn:focus-visible {
   outline: 2px solid var(--teal);
@@ -389,6 +460,14 @@ h3 {
   letter-spacing: 0.5px;
   color: var(--red);
   text-align: left;
+  animation: error-in 0.25s ease;
+}
+
+@keyframes error-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
 }
 
 .cta__submit {
@@ -464,9 +543,13 @@ h3 {
   margin-left: 84px;
 }
 
+.footer__links a {
+  transition: color 0.25s ease, text-shadow 0.25s ease, transform 0.25s ease;
+}
+
 .footer__links a:hover {
-  font-weight: 700;
   color: var(--white);
+  text-shadow: 0 0 0.6px currentColor;
 }
 
 .footer__social {
@@ -483,12 +566,15 @@ h3 {
   height: 32px;
   border: 1px solid var(--white);
   border-radius: 50%;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  transition: color 0.25s ease, border-color 0.25s ease, transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .footer__social a:hover {
   color: var(--teal);
   border-color: var(--teal);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px hsla(176, 68%, 64%, 0.25);
 }
 
 .attribution {
@@ -507,6 +593,86 @@ h3 {
 .attribution a:hover,
 .attribution a:focus {
   color: var(--white);
+}
+
+/* ============ Motion: page-load hero + scroll reveal ============ */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+.header {
+  animation: fade-up 0.7s ease backwards;
+}
+
+.hero__illustration,
+.hero__title,
+.hero__text,
+.hero__cta {
+  animation: fade-up 0.8s ease backwards;
+}
+
+.hero__title {
+  animation-delay: 0.15s;
+}
+
+.hero__text {
+  animation-delay: 0.3s;
+}
+
+.hero__cta {
+  animation-delay: 0.45s;
+}
+
+/* elements start hidden, .in-view is added by an IntersectionObserver;
+   the resting state is identical to the static layout (transform: none) */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease var(--reveal-delay, 0s),
+    transform 0.7s ease var(--reveal-delay, 0s);
+}
+
+.reveal--left {
+  transform: translateX(-36px);
+}
+
+.reveal--right {
+  transform: translateX(36px);
+}
+
+.reveal.in-view {
+  opacity: 1;
+  transform: none;
+}
+
+.feature:nth-child(even) {
+  --reveal-delay: 0.12s;
+}
+
+.tcard:nth-child(2) {
+  --reveal-delay: 0.12s;
+}
+
+.tcard:nth-child(3) {
+  --reveal-delay: 0.24s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* ============ Mobile (design width 375) ============ */

@@ -28,7 +28,7 @@ const Features: Component = () => (
   <section class="features" aria-label="Features">
     <For each={FEATURES}>
       {(feature) => (
-        <article class="feature">
+        <article class="feature reveal">
           <div class="feature__icon-box">
             <img src={asset(`images/${feature.icon}`)} alt="" />
           </div>
