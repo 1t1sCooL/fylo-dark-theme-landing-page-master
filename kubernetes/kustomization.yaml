@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - deployment.yaml
+  - service.yaml
+
+images:
+  - name: fylo-dark-theme-landing-page-master-app
+    newName: fylo-dark-theme-landing-page-master-app
+    newTag: latest
