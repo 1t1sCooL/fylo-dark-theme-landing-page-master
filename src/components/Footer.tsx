@@ -16,7 +16,7 @@ const Footer: Component = () => (
         <div class="footer__contacts">
           <a class="footer__contact" href="tel:+15431234567">
             <img src={asset('images/icon-phone.svg')} alt="" width="18" height="18" />
-            <span>+1-543-123-4567</span>
+            <span>+1‑543‑123‑4567</span>
           </a>
           <a class="footer__contact" href="mailto:example@fylo.com">
             <img src={asset('images/icon-email.svg')} alt="" width="20" height="16" />
@@ -34,7 +34,8 @@ const Footer: Component = () => (
           <li><a href="#">Terms</a></li>
           <li><a href="#">Privacy</a></li>
         </ul>
-        <ul class="footer__social" aria-label="Social media">
+        <nav class="footer__social-nav" aria-label="Social media">
+        <ul class="footer__social">
           <li>
             <a href="#" aria-label="Facebook">
               <svg width="12" height="12" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true">
@@ -57,6 +58,7 @@ const Footer: Component = () => (
             </a>
           </li>
         </ul>
+        </nav>
       </div>
       <p class="attribution">
         Challenge by{' '}
